@@ -1,0 +1,135 @@
+<div class="header-container">
+  <div class="logo-container">
+    <a href="index.html" class="logo-link">
+      <img src="assets/images/characters/frog-logo.svg" alt="Curirana Logo" class="logo-image" onerror="this.src='assets/images/characters/frog-logo.png'">
+      <h1 class="logo-text">Curirana</h1>
+    </a>
+  </div>
+  
+  <div class="header-actions">
+    <div class="tagline">
+      <span>Cuidando tu mente con ternura</span>
+    </div>
+    
+    <div class="user-menu">
+      <button class="btn-icon theme-toggle-btn" title="Cambiar tema">
+        <i data-feather="moon"></i>
+      </button>
+      
+      <button class="btn-icon settings-btn" title="Configuración">
+        <i data-feather="settings"></i>
+      </button>
+      
+      <div class="user-profile" data-auth-status="logged-in" style="display: none;">
+        <span class="user-name" data-user-name>Usuario</span>
+        <button class="btn-icon user-avatar">
+          <i data-feather="user"></i>
+        </button>
+        <div class="user-dropdown">
+          <a href="pages/settings.html">Mi perfil</a>
+          <button id="logout-btn">Cerrar sesión</button>
+        </div>
+      </div>
+      
+      <div class="auth-buttons" data-auth-status="logged-out">
+        <a href="pages/login.html" class="btn-text">Iniciar sesión</a>
+        <a href="pages/signup.html" class="btn btn-primary">Registrarse</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="main-nav">
+  <button class="menu-toggle">
+    <i data-feather="menu"></i>
+  </button>
+  
+  <div class="menu-items">
+    <a href="index.html" class="nav-item">
+      <i data-feather="home"></i>
+      <span>Inicio</span>
+    </a>
+    <a href="pages/emotions.html" class="nav-item">
+      <i data-feather="heart"></i>
+      <span>Emociones</span>
+    </a>
+    <a href="pages/breathing.html" class="nav-item">
+      <i data-feather="wind"></i>
+      <span>Respiración</span>
+    </a>
+    <a href="pages/gratitude.html" class="nav-item">
+      <i data-feather="star"></i>
+      <span>Gratitud</span>
+    </a>
+    <a href="pages/reminders.html" class="nav-item">
+      <i data-feather="bell"></i>
+      <span>Recordatorios</span>
+    </a>
+    <a href="pages/goals.html" class="nav-item">
+      <i data-feather="target"></i>
+      <span>Metas</span>
+    </a>
+    <a href="pages/values.html" class="nav-item">
+      <i data-feather="compass"></i>
+      <span>Valores</span>
+    </a>
+    <a href="pages/quotes.html" class="nav-item">
+      <i data-feather="message-circle"></i>
+      <span>Frases</span>
+    </a>
+    <a href="pages/thoughts.html" class="nav-item">
+      <i data-feather="cloud"></i>
+      <span>Pensamientos</span>
+    </a>
+  </div>
+</nav>
+
+<script>
+  // Inicializar iconos Feather
+  if (typeof feather !== 'undefined') {
+    feather.replace();
+  }
+  
+  // Configurar evento para el botón de menú en móvil
+  const menuToggle = document.querySelector('.menu-toggle');
+  const menuItems = document.querySelector('.menu-items');
+  
+  if (menuToggle && menuItems) {
+    menuToggle.addEventListener('click', () => {
+      menuItems.classList.toggle('show');
+    });
+  }
+  
+  // Configurar evento para cerrar sesión
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn && window.authHelper) {
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await window.authHelper.logout();
+        window.location.href = '/index.html';
+      } catch (error) {
+        console.error('Error al cerrar sesión:', error);
+        window.uiHelper.showAlert('Error al cerrar sesión', 'error');
+      }
+    });
+  }
+  
+  // Destacar elemento de navegación activo
+  const currentPath = window.location.pathname;
+  const navItems = document.querySelectorAll('.nav-item');
+  
+  navItems.forEach(item => {
+    const href = item.getAttribute('href');
+    
+    // Comprobar si estamos en la página de inicio
+    if (currentPath.endsWith('/') || currentPath.endsWith('index.html')) {
+      if (href === 'index.html') {
+        item.classList.add('active');
+      }
+    } 
+    // Comprobar otras páginas
+    else if (currentPath.includes(href)) {
+      item.classList.add('active');
+    }
+  });
+</script>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ejercicios de respiración para reducir la ansiedad - Curirana">
+  <title>Ejercicios de Respiración | Curirana</title>
+  <link rel="manifest" href="../manifest.json">
+  <link rel="icon" href="../favicon.ico">
+  
+  <!-- Fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Estilos CSS -->
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/themes.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Feather Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
+  
+  <style>
+    /* Estilos específicos para la página de respiración */
+    .breathing-page {
+      padding-bottom: 2rem;
+    }
+    
+    .exercises-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .exercise-card {
+      display: flex;
+      align-items: center;
+      padding: var(--spacing-md);
+      background-color: var(--background-tertiary);
+      border-radius: var(--border-radius-medium);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    
+    .exercise-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .exercise-card.selected {
+      border: 2px solid var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(161, 217, 201, 0.2);
+    }
+    
+    .exercise-card.disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    
+    .exercise-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      border-radius: var(--border-radius-circle);
+      margin-right: var(--spacing-md);
+    }
+    
+    .exercise-icon i {
+      color: white;
+    }
+    
+    .exercise-info {
+      flex: 1;
+    }
+    
+    .exercise-info h3 {
+      margin-bottom: var(--spacing-xs);
+      font-size: var(--font-size-md);
+    }
+    
+    .exercise-info p {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      margin-bottom: 0;
+    }
+    
+    .breathing-practice {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .breathing-animation-container {
+      width: 100%;
+      max-width: 300px;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    #breathing-animation {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .breathing-circle {
+      width: 200px;
+      height: 200px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.8;
+      transition: transform 4s ease-in-out, opacity 4s ease-in-out;
+      position: relative;
+    }
+    
+    .breathing-text {
+      color: white;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      z-index: 1;
+    }
+    
+    .breathing-square {
+      width: 200px;
+      height: 200px;
+      border: 3px solid var(--primary-color);
+      border-radius: var(--border-radius-small);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    
+    .breathing-dot {
+      width: 20px;
+      height: 20px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translate(-50%, -50%);
+      transition: top 4s, left 4s;
+    }
+    
+    .breathing-wave {
+      position: absolute;
+      border: 2px solid var(--primary-color);
+      border-radius: 50%;
+      opacity: 0.4;
+      width: 150px;
+      height: 150px;
+    }
+    
+    .breathing-wave:nth-child(1) {
+      width: 100px;
+      height: 100px;
+    }
+    
+    .breathing-wave:nth-child(2) {
+      width: 150px;
+      height: 150px;
+    }
+    
+    .breathing-wave:nth-child(3) {
+      width: 200px;
+      height: 200px;
+    }
+    
+    .body-outline {
+      width: 100px;
+      height: 200px;
+      position: relative;
+    }
+    
+    .scan-line {
+      position: absolute;
+      left: 0;
+      top: 20%;
+      width: 100%;
+      height: 5px;
+      background-color: var(--primary-color);
+      opacity: 0.8;
+      z-index: 1;
+      transition: top 4s;
+    }
+    
+    .breathing-instructions {
+      text-align: center;
+      padding: var(--spacing-md);
+      background-color: var(--background-secondary);
+      border-radius: var(--border-radius-medium);
+      margin-bottom: var(--spacing-lg);
+      max-width: 600px;
+      width: 100%;
+    }
+    
+    .breathing-buttons {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .breathing-config {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .form-group label {
+      margin-bottom: var(--spacing-xs);
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+    }
+    
+    .form-control {
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border: 1px solid var(--background-secondary);
+      border-radius: var(--border-radius-small);
+      background-color: var(--background-tertiary);
+      color: var(--text-primary);
+      font-family: 'Quicksand', sans-serif;
+      font-size: var(--font-size-sm);
+    }
+    
+    .breathing-status {
+      margin-top: var(--spacing-md);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .breathing-phase {
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .breathing-progress {
+      width: 100%;
+      max-width: 300px;
+      height: 5px;
+      background-color: var(--background-secondary);
+      border-radius: var(--border-radius-small);
+      margin-bottom: var(--spacing-sm);
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      width: 100%;
+      background-color: var(--primary-color);
+      transition: width 0s linear;
+    }
+    
+    .breathing-stats {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 300px;
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+    }
+    
+    .benefits-card {
+      margin-top: var(--spacing-lg);
+    }
+    
+    .benefits-list {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .benefits-list li {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .benefits-list li i {
+      color: var(--primary-color);
+      margin-right: var(--spacing-sm);
+    }
+    
+    /* Responsive */
+    @media (max-width: 767px) {
+      .breathing-practice {
+        margin-bottom: var(--spacing-md);
+      }
+      
+      .breathing-animation-container {
+        height: 250px;
+        margin-bottom: var(--spacing-md);
+      }
+      
+      .breathing-circle,
+      .breathing-square {
+        width: 150px;
+        height: 150px;
+      }
+      
+      .breathing-config {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="theme-light">
+    <div id="loader">
+      <div class="frog-loader"></div>
+      <p>Cargando Curirana...</p>
+    </div>
+
+    <div id="main-container" style="display: none;">
+      <header id="main-header"></header>
+      
+      <main id="content" class="breathing-page">
+        <section class="page-header">
+          <h1>Ejercicios de Respiración</h1>
+          <p class="page-description">Practica ejercicios de respiración para reducir la ansiedad, gestionar el estrés y encontrar calma en momentos difíciles.</p>
+        </section>
+        
+        <section class="breathing-section">
+          <div class="section-container">
+            <div class="card">
+              <h2 class="card-title">Selecciona un ejercicio</h2>
+              
+              <div id="breathing-exercise-selector"></div>
+              
+              <div class="breathing-practice">
+                <div class="breathing-animation-container">
+                  <div id="breathing-animation"></div>
+                </div>
+                
+                <div class="breathing-instructions" id="breathing-instructions">
+                  Selecciona un ejercicio de respiración para comenzar.
+                </div>
+                
+                <div id="breathing-controls"></div>
+              </div>
+              
+              <div class="benefits-card">
+                <div id="breathing-benefits"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="recommendations-section">
+          <div class="section-container">
+            <div class="card">
+              <h2 class="card-title">Recomendaciones personalizadas</h2>
+              
+              <div id="breathing-recommendations" class="breathing-recommendations">
+                <p class="loading">Cargando recomendaciones...</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      
+      <footer id="main-footer"></footer>
+    </div>
+  </div>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  
+  <!-- Componentes -->
+  <script src="../js/components-loader.js"></script>
+  
+  <!-- Scripts -->
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/utils/ui-helpers.js"></script>
+  <script src="../js/utils/date-helpers.js"></script>
+  <script src="../js/utils/storage.js"></script>
+  <script src="../js/modules/breathing.js"></script>
+  <script src="../js/app.js"></script>
+
+  <script>
+    // Cuando la página se carga
+    document.addEventListener('DOMContentLoaded', () => {
+      // Mostrar la interfaz principal después de cargar
+      setTimeout(() => {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('main-container').style.display = 'block';
+      }, 1000);
+      
+      // Inicializar iconos Feather
+      feather.replace();
+      
+      // Cargar recomendaciones personalizadas
+      loadBreathingRecommendations();
+    });
+    
+    // Cargar recomendaciones personalizadas
+    async function loadBreathingRecommendations() {
+      const recommendationsContainer = document.getElementById('breathing-recommendations');
+      if (!recommendationsContainer || !window.breathingHelper) return;
+      
+      try {
+        // Obtener recomendaciones
+        const recommendations = await window.breathingHelper.getPersonalizedRecommendations();
+        
+        // Crear HTML
+        let html = '';
+        
+        if (recommendations.hasData) {
+          // Usuario con datos previos
+          html += `
+            <div class="recommendations-content">
+              <p class="recommendation-message">${recommendations.message}</p>
+              
+              <div class="recommendation-stats">
+                <div class="stat-item">
+                  <div class="stat-value">${recommendations.totalSessions || 0}</div>
+                  <div class="stat-label">Sesiones totales</div>
+                </div>
+                
+                <div class="stat-item">
+                  <div class="stat-value">${recommendations.totalCycles || 0}</div>
+                  <div class="stat-label">Ciclos completados</div>
+                </div>
+                
+                <div class="stat-item">
+                  <div class="stat-value">${Math.floor((recommendations.totalDuration || 0) / 60)}</div>
+                  <div class="stat-label">Minutos de práctica</div>
+                </div>
+              </div>
+              
+              <button id="try-recommended" class="btn btn-primary">Probar ejercicio recomendado</button>
+            </div>
+          `;
+        } else {
+          // Usuario sin datos previos
+          html += `
+            <div class="recommendations-content">
+              <p class="recommendation-message">${recommendations.message}</p>
+              <button id="try-recommended" class="btn btn-primary">Probar ejercicio recomendado</button>
+            </div>
+          `;
+        }
+        
+        // Actualizar contenedor
+        recommendationsContainer.innerHTML = html;
+        
+        // Configurar evento para botón de ejercicio recomendado
+        const tryButton = document.getElementById('try-recommended');
+        if (tryButton && recommendations.recommendedExercise) {
+          tryButton.addEventListener('click', () => {
+            // Seleccionar ejercicio recomendado
+            if (window.breathingHelper.selectExercise) {
+              window.breathingHelper.selectExercise(recommendations.recommendedExercise);
+              
+              // Desplazar a la sección de ejercicios
+              document.querySelector('.breathing-section').scrollIntoView({ 
+                behavior: 'smooth' 
+              });
+            }
+          });
+        }
+        
+      } catch (error) {
+        console.error('Error al cargar recomendaciones:', error);
+        recommendationsContainer.innerHTML = `
+          <p class="error">Error al cargar recomendaciones. Por favor, inténtalo de nuevo más tarde.</p>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<div class="footer-container">
+  <div class="footer-info">
+    <div class="footer-logo">
+      <img src="assets/images/characters/frog-logo.svg" alt="Curirana Logo" class="footer-logo-image" onerror="this.src='assets/images/characters/frog-logo.png'">
+      <span class="footer-logo-text">Curirana</span>
+    </div>
+    
+    <div class="footer-tagline">
+      Cuidando tu mente con ternura
+    </div>
+    
+    <div class="footer-links">
+      <a href="pages/about.html">Acerca de</a>
+      <a href="pages/privacy.html">Privacidad</a>
+      <a href="pages/terms.html">Términos</a>
+      <a href="pages/contact.html">Contacto</a>
+    </div>
+  </div>
+  
+  <div class="footer-credits">
+    <p>&copy; <span class="current-year">2025</span> Curirana. Todos los derechos reservados.</p>
+    <p class="footer-disclaimer">
+      Los ejercicios y herramientas ofrecidos en esta aplicación no sustituyen la atención profesional. En caso de crisis o situaciones graves, busca ayuda médica o psicológica especializada.
+    </p>
+  </div>
+</div>
+
+<script>
+  // Actualizar año actual
+  const yearElement = document.querySelector('.current-year');
+  if (yearElement) {
+    yearElement.textContent = new Date().getFullYear();
+  }
+</script>

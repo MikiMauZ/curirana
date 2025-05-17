@@ -1,0 +1,207 @@
+/* Estilos responsivos para Curirana */
+
+/* Dispositivos pequeños (móviles, menos de 576px) */
+@media (max-width: 575.98px) {
+  :root {
+    --font-size-xs: 10px;
+    --font-size-sm: 12px;
+    --font-size-md: 14px;
+    --font-size-lg: 18px;
+    --font-size-xl: 22px;
+    --font-size-xxl: 26px;
+    
+    --spacing-xs: 4px;
+    --spacing-sm: 6px;
+    --spacing-md: 12px;
+    --spacing-lg: 18px;
+    --spacing-xl: 24px;
+  }
+  
+  #main-container {
+    padding: var(--spacing-sm);
+  }
+  
+  .modules-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  .frog-container {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .module-card {
+    padding: var(--spacing-md);
+  }
+  
+  .icon-container {
+    width: 50px;
+    height: 50px;
+  }
+  
+  #welcome {
+    padding: var(--spacing-md);
+  }
+  
+  #did-you-know {
+    padding: var(--spacing-md);
+  }
+}
+
+/* Dispositivos medianos (tablets, 576px y hasta 767px) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .modules-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Dispositivos grandes (desktops pequeños, 768px y hasta 991px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .modules-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Dispositivos extra grandes (desktops grandes, 992px y hasta 1199px) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .modules-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Dispositivos extra-extra grandes (desktops muy grandes, 1200px y superior) */
+@media (min-width: 1200px) {
+  .modules-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  #main-container {
+    padding: var(--spacing-lg);
+  }
+}
+
+/* Para dispositivos táctiles */
+@media (hover: none) {
+  .module-card:hover {
+    transform: none;
+  }
+  
+  .btn:hover, .btn-primary:hover, .btn-secondary:hover, .btn-subtle:hover {
+    transform: none;
+  }
+}
+
+/* Ajustes para orientación horizontal en móviles */
+@media (max-height: 500px) and (orientation: landscape) {
+  .frog-container {
+    width: 80px;
+    height: 80px;
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  #welcome {
+    padding: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .welcome-message {
+    font-size: var(--font-size-md);
+  }
+  
+  h1 {
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .modules-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  
+  .module-card {
+    padding: var(--spacing-sm);
+  }
+  
+  .icon-container {
+    width: 40px;
+    height: 40px;
+    margin-bottom: var(--spacing-xs);
+  }
+}
+
+/* Ajustes para alta densidad de píxeles */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  /* Optimizaciones para pantallas retina */
+  .module-card {
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+/* Soporte para modo oscuro del sistema */
+@media (prefers-color-scheme: dark) {
+  body.theme-auto {
+    --primary-color: #7ebeb1;
+    --secondary-color: #9686b3;
+    --accent-color: #e19089;
+    --background-color: #1a1a1a;
+    --background-secondary: #252525;
+    --background-tertiary: #333333;
+    --text-primary: #f8f9fa;
+    --text-secondary: #cdcdcd;
+    --text-light: #9e9e9e;
+  }
+  
+  body.theme-auto .module-card {
+    background-color: #2a2a2a;
+  }
+  
+  body.theme-auto .icon-container {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Ajustes para animaciones reducidas */
+/* Ajustes para animaciones reducidas */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .frog-breathing, .breath-circle, .wave, .float, .rotate-slow, .blink, .bounce, .ripple {
+    animation: none !important;
+  }
+  
+  .page-transition-enter, .page-transition-enter-active, 
+  .page-transition-exit, .page-transition-exit-active {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+/* Ajustes para mejor legibilidad */
+@media (max-width: 767.98px) {
+  .fact {
+    font-size: var(--font-size-md);
+    line-height: 1.6;
+  }
+  
+  p {
+    line-height: 1.7;
+  }
+}
+
+/* Ajustes para dispositivos de entrada específicos */
+@media (pointer: coarse) {
+  /* Ajustes para dispositivos táctiles */
+  .btn, .btn-primary, .btn-secondary, .btn-subtle {
+    padding: var(--spacing-md) var(--spacing-lg);
+    min-height: 44px; /* Tamaño mínimo para áreas táctiles */
+  }
+  
+  input, select, textarea {
+    min-height: 44px;
+    font-size: var(--font-size-md);
+  }
+}

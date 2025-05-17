@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Curirana - Cuidando tu mente con ternura">
+    <title>Curirana</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="favicon.ico">
+    
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+    <div id="app" class="theme-light">
+        <div id="loader">
+            <div class="frog-loader"></div>
+            <p>Cargando Curirana...</p>
+        </div>
+
+        <div id="main-container" style="display: none;">
+            <header id="main-header"></header>
+            
+            <main id="content">
+                <section id="welcome">
+                    <div class="frog-container">
+                        <!-- Ranita SVG animada -->
+                        <svg class="frog-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Se insertará el SVG de la ranita con JavaScript -->
+                        </svg>
+                    </div>
+                    <h1>Bienvenido a Curirana</h1>
+                    <p class="tagline">Cuidando tu mente con ternura</p>
+                    <p class="welcome-message">Hola, estás haciendo lo mejor que puedes. Respira, estás en casa.</p>
+                </section>
+                
+                <section id="modules-access">
+                    <h2>Módulos</h2>
+                    <div class="modules-grid">
+                        <a href="pages/emotions.html" class="module-card">
+                            <div class="icon-container">
+                                <i data-feather="heart"></i>
+                            </div>
+                            <h3>Registro de emociones</h3>
+                        </a>
+                        <a href="pages/breathing.html" class="module-card">
+                            <div class="icon-container">
+                                <i data-feather="wind"></i>
+                            </div>
+                            <h3>Ejercicios de respiración</h3>
+                        </a>
+                        <a href="pages/gratitude.html" class="module-card">
+                            <div class="icon-container">
+                                <i data-feather="star"></i>
+                            </div>
+                            <h3>Diario de gratitud</h3>
+                        </a>
+                        <a href="pages/reminders.html" class="module-card">
+                            <div class="icon-container">
+                                <i data-feather="bell"></i>
+                            </div>
+                            <h3>Recordatorios</h3>
+                        </a>
+                        <a href="pages/goals.html" class="module-card">
+                            <div class="icon-container">
+                                <i data-feather="target"></i>
+                            </div>
+                            <h3>Metas amables</h3>
+                        </a>
+                        <a href="pages/values.html" class="module-card">
+                            <div class="icon-container">
+                                <i data-feather="compass"></i>
+                            </div>
+                            <h3>Mis valores</h3>
+                        </a>
+                        <a href="pages/quotes.html" class="module-card">
+                            <div class="icon-container">
+                                <i data-feather="message-circle"></i>
+                            </div>
+                            <h3>Frases reconfortantes</h3>
+                        </a>
+                        <a href="pages/thoughts.html" class="module-card">
+                            <div class="icon-container">
+                                <i data-feather="cloud"></i>
+                            </div>
+                            <h3>Pensamientos</h3>
+                        </a>
+                    </div>
+                </section>
+                
+                <section id="did-you-know">
+                    <h2>¿Sabías que...?</h2>
+                    <div class="fact-container">
+                        <p class="fact">La ansiedad es una reacción normal y sana. Todo el mundo la experimenta en circunstancias de peligro, en situaciones delicadas, o en momentos de preocupación.</p>
+                        <button id="nextFact" class="btn-subtle">Siguiente</button>
+                    </div>
+                </section>
+            </main>
+            
+            <footer id="main-footer"></footer>
+        </div>
+    </div>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    
+    <!-- Componentes -->
+    <script src="js/components-loader.js"></script>
+    
+    <!-- Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/utils/ui-helpers.js"></script>
+    <script src="js/app.js"></script>
+
+    <script>
+        // Inicializar los iconos
+        feather.replace();
+    </script>
+</body>
+</html>

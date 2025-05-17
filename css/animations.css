@@ -1,0 +1,212 @@
+/* Animaciones para Curirana */
+
+/* Animación de la ranita respirando */
+.frog-breathing {
+  animation: breathing 4s infinite ease-in-out;
+}
+
+@keyframes breathing {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Animación para cambiar páginas */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+/* Animación para elementos que aparecen */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animación para elementos que desaparecen */
+.fade-out {
+  animation: fadeOut 0.5s ease-in-out;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Animación de pulso para botones y elementos interactivos */
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Animación para los ejercicios de respiración */
+.breath-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  opacity: 0.8;
+  transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+}
+
+.breath-inhale {
+  transform: scale(1.5);
+  opacity: 1;
+}
+
+.breath-hold {
+  transform: scale(1.5);
+  opacity: 1;
+}
+
+.breath-exhale {
+  transform: scale(1);
+  opacity: 0.8;
+}
+
+/* Animación para ondas suaves (agua, respiración fluida) */
+.wave {
+  animation: wave 3s infinite ease-in-out;
+}
+
+@keyframes wave {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Animación para elementos que flotan */
+.float {
+  animation: float 6s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* Animación para elementos que giran suavemente */
+.rotate-slow {
+  animation: rotateSlow 10s infinite linear;
+}
+
+@keyframes rotateSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Animación para el parpadeo de las ranitas */
+.blink {
+  animation: blink 4s infinite;
+}
+
+@keyframes blink {
+  0%, 45%, 55%, 100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.1);
+  }
+}
+
+/* Animación de salto para elementos alegres */
+.bounce {
+  animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+/* Animación para efectos de ondulación (como la respiración acuática) */
+.ripple {
+  position: relative;
+}
+
+.ripple::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: currentColor;
+  border-radius: 50%;
+  opacity: 0.2;
+  transform: scale(0);
+  animation: ripple 1.5s infinite;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}

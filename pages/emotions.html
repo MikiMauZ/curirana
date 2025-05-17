@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Registro y gestión de emociones - Curirana">
+  <title>Registro de Emociones | Curirana</title>
+  <link rel="manifest" href="../manifest.json">
+  <link rel="icon" href="../favicon.ico">
+  
+  <!-- Fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Estilos CSS -->
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/themes.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Feather Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+  <div id="app" class="theme-light">
+    <div id="loader">
+      <div class="frog-loader"></div>
+      <p>Cargando Curirana...</p>
+    </div>
+
+    <div id="main-container" style="display: none;">
+      <header id="main-header"></header>
+      
+      <main id="content">
+        <section class="page-header">
+          <h1>Registro de Emociones</h1>
+          <p class="page-description">Identifica, nombra y comprende tus emociones para gestionar mejor tu bienestar emocional.</p>
+        </section>
+        
+        <section class="emotions-section">
+          <div class="section-container">
+            <div class="card new-emotion-card">
+              <h2 class="card-title">¿Cómo te sientes ahora?</h2>
+              
+              <form id="emotion-form" class="emotion-form">
+                <div class="form-group">
+                  <label for="selected-emotion">Selecciona tu emoción:</label>
+                  <div class="emotion-picker"></div>
+                  <input type="hidden" id="selected-emotion" name="selected-emotion" value="">
+                </div>
+                
+                <div class="form-group">
+                  <label for="emotion-intensity">¿Qué intensidad tiene? (1-5)</label>
+                  <div class="intensity-slider-container">
+                    <input type="range" id="emotion-intensity" name="emotion-intensity" min="1" max="5" value="3" class="intensity-slider">
+                    <div class="intensity-labels">
+                      <span>Leve</span>
+                      <span>Moderada</span>
+                      <span>Intensa</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="emotion-description">¿Quieres describir cómo te sientes? (opcional)</label>
+                  <textarea id="emotion-description" name="emotion-description" rows="3" placeholder="Describe aquí lo que estás sintiendo..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                  <label>¿Qué sensaciones físicas experimentas? (opcional)</label>
+                  <div class="sensation-picker"></div>
+                  <input type="hidden" id="selected-sensations" name="selected-sensations" value="[]">
+                </div>
+                
+                <div class="form-actions">
+                  <button type="submit" class="btn btn-primary">Registrar emoción</button>
+                </div>
+              </form>
+            </div>
+            
+            <div class="card emotion-history-card">
+              <div class="card-header">
+                <h2 class="card-title">Historial de emociones</h2>
+                <button id="refresh-history" class="btn-icon" title="Actualizar historial">
+                  <i data-feather="refresh-cw"></i>
+                </button>
+              </div>
+              
+              <div id="emotion-history" class="emotion-history">
+                <div class="loading">Cargando historial...</div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="emotions-patterns-section">
+          <div class="section-container">
+            <div class="card patterns-card">
+              <h2 class="card-title">Patrones emocionales</h2>
+              
+              <div id="emotion-patterns" class="emotion-patterns">
+                <p class="patterns-placeholder">Se necesitan al menos 3 registros de emociones para analizar patrones. ¡Sigue registrando cómo te sientes!</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      
+      <footer id="main-footer"></footer>
+    </div>
+  </div>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  
+  <!-- Componentes -->
+  <script src="../js/components-loader.js"></script>
+  
+  <!-- Scripts -->
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/utils/ui-helpers.js"></script>
+  <script src="../js/utils/date-helpers.js"></script>
+  <script src="../js/utils/storage.js"></script>
+  <script src="../js/modules/emotions.js"></script>
+  <script src="../js/app.js"></script>
+
+  <script>
+    // Cuando la página se carga
+    document.addEventListener('DOMContentLoaded', () => {
+      // Mostrar la interfaz principal después de cargar
+      setTimeout(() => {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('main-container').style.display = 'block';
+      }, 1000);
+      
+      // Inicializar iconos Feather
+      feather.replace();
+      
+      // Configurar evento para el botón de actualizar historial
+      const refreshBtn = document.getElementById('refresh-history');
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', () => {
+          const historyContainer = document.getElementById('emotion-history');
+          if (historyContainer && window.emotionsHelper) {
+            window.emotionsHelper.loadEmotionHistory(historyContainer);
+          }
+        });
+      }
+      
+      // Cargar análisis de patrones emocionales
+      loadEmotionPatterns();
+    });
+    
+    // Cargar análisis de patrones emocionales
+    async function loadEmotionPatterns() {
+      const patternsContainer = document.getElementById('emotion-patterns');
+      if (!patternsContainer || !window.emotionsHelper) return;
+      
+      try {
+        // Obtener emociones registradas
+        const emotions = await window.emotionsHelper.getEmotionRecords();
+        
+        if (!emotions || emotions.length < 3) {
+          patternsContainer.innerHTML = `
+            <p class="patterns-placeholder">Se necesitan al menos 3 registros de emociones para analizar patrones. ¡Sigue registrando cómo te sientes!</p>
+          `;
+          return;
+        }
+        
+        // Analizar patrones
+        const patterns = window.emotionsHelper.analyzeEmotionPatterns(emotions);
+        
+        if (!patterns.hasEnoughData) {
+          patternsContainer.innerHTML = `
+            <p class="patterns-placeholder">${patterns.message}</p>
+          `;
+          return;
+        }
+        
+        // Crear HTML para mostrar patrones
+        let html = `
+          <div class="patterns-summary">
+            <p>${patterns.summary}</p>
+          </div>
+          
+          <div class="patterns-grid">
+            <div class="pattern-card">
+              <h3>Emociones más frecuentes</h3>
+              <div class="emotion-frequency">
+        `;
+        
+        // Mostrar emociones más frecuentes
+        patterns.emotionFrequency.slice(0, 3).forEach(emotion => {
+          html += `
+            <div class="emotion-frequency-item">
+              <div class="emotion-emoji">${emotion.emoji}</div>
+              <div class="emotion-details">
+                <div class="emotion-name">${emotion.name}</div>
+                <div class="emotion-percentage">${emotion.percentage}%</div>
+              </div>
+            </div>
+          `;
+        });
+        
+        html += `
+              </div>
+            </div>
+            
+            <div class="pattern-card">
+              <h3>Sensaciones físicas comunes</h3>
+              <div class="sensation-frequency">
+        `;
+        
+        // Mostrar sensaciones físicas más comunes
+        if (patterns.topSensations && patterns.topSensations.length > 0) {
+          patterns.topSensations.forEach(sensation => {
+            html += `
+              <div class="sensation-frequency-item">
+                <div class="sensation-name">${sensation.name}</div>
+                <div class="sensation-percentage">${sensation.percentage}%</div>
+              </div>
+            `;
+          });
+        } else {
+          html += `<p>No hay suficientes datos sobre sensaciones físicas.</p>`;
+        }
+        
+        html += `
+              </div>
+            </div>
+            
+            <div class="pattern-card">
+              <h3>Recomendaciones</h3>
+              <ul class="recommendations-list">
+        `;
+        
+        // Mostrar recomendaciones
+        patterns.recommendations.forEach(recommendation => {
+          html += `<li>${recommendation}</li>`;
+        });
+        
+        html += `
+              </ul>
+            </div>
+          </div>
+        `;
+        
+        // Actualizar contenedor
+        patternsContainer.innerHTML = html;
+        
+      } catch (error) {
+        console.error('Error al cargar patrones emocionales:', error);
+        patternsContainer.innerHTML = `
+          <p class="error">Error al analizar patrones emocionales. Por favor, inténtalo de nuevo más tarde.</p>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Gestión de pensamientos y técnicas para calmar la mente - Curirana">
+  <title>Gestión de Pensamientos | Curirana</title>
+  <link rel="manifest" href="../manifest.json">
+  <link rel="icon" href="../favicon.ico">
+  
+  <!-- Fuentes -->
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Estilos CSS -->
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/themes.css">
+  <link rel="stylesheet" href="../css/animations.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+
+  <!-- Feather Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
+  
+  <style>
+    /* Estilos específicos para la página de pensamientos */
+    .thoughts-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--spacing-lg);
+    }
+    
+    @media (min-width: 992px) {
+      .thoughts-container {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .thought-exercise {
+      margin-bottom: var(--spacing-lg);
+      padding: var(--spacing-lg);
+      background-color: var(--background-tertiary);
+      border-radius: var(--border-radius-medium);
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    
+    .thought-exercise:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .thought-exercise h3 {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
+      color: var(--primary-color);
+    }
+    
+    .thought-exercise h3 i {
+      margin-right: var(--spacing-sm);
+    }
+    
+    .thought-exercise p {
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .thought-exercise .exercise-steps {
+      list-style: none;
+      padding: 0;
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .thought-exercise .exercise-steps li {
+      margin-bottom: var(--spacing-sm);
+      padding-left: var(--spacing-lg);
+      position: relative;
+    }
+    
+    .thought-exercise .exercise-steps li:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 8px;
+      height: 8px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+    }
+    
+    .thought-exercise .exercise-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+    
+    .thought-record-form {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .thought-record-form .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .thought-record-form label {
+      margin-bottom: var(--spacing-xs);
+      font-weight: 500;
+    }
+    
+    .thought-record-form textarea,
+    .thought-record-form input {
+      padding: var(--spacing-sm);
+      border: 1px solid var(--background-secondary);
+      border-radius: var(--border-radius-small);
+      background-color: var(--background-tertiary);
+      font-family: 'Quicksand', sans-serif;
+      color: var(--text-primary);
+    }
+    
+    .thought-record-form textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .thought-record-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .thought-record-table th,
+    .thought-record-table td {
+      padding: var(--spacing-sm);
+      text-align: left;
+      border-bottom: 1px solid var(--background-secondary);
+    }
+    
+    .thought-record-table th {
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+    
+    .thought-record-table tr:hover {
+      background-color: var(--background-secondary);
+    }
+    
+    .thought-record-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--spacing-sm);
+    }
+    
+    .thought-metaphor {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+      padding: var(--spacing-lg);
+      background-color: var(--background-secondary);
+      border-radius: var(--border-radius-medium);
+    }
+    
+    .thought-metaphor-icon {
+      font-size: 3rem;
+      margin-right: var(--spacing-lg);
+      color: var(--primary-color);
+      flex: 0 0 auto;
+    }
+    
+    .thought-metaphor-content {
+      flex: 1;
+    }
+    
+    .thought-metaphor-content h3 {
+      margin-bottom: var(--spacing-sm);
+      color: var(--primary-color);
+    }
+    
+    @media (max-width: 767px) {
+      .thought-metaphor {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .thought-metaphor-icon {
+        margin-right: 0;
+        margin-bottom: var(--spacing-md);
+      }
+    }
+    
+    /* Animación para el niño y el algodón de azúcar */
+    .cotton-candy-animation {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .child-figure {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 100px;
+      background-color: var(--primary-color);
+      border-radius: 30px 30px 0 0;
+    }
+    
+    .child-head {
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 40px;
+      background-color: var(--primary-color);
+      border-radius: 50%;
+    }
+    
+    .cotton-candy {
+      position: absolute;
+      top: 20px;
+      left: 20%;
+      width: 60px;
+      height: 60px;
+      background-color: var(--accent-color);
+      border-radius: 50%;
+      opacity: 0.8;
+      transition: all 0.3s ease;
+    }
+    
+    .cotton-candy:before {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 5px;
+      height: 20px;
+      background-color: var(--text-light);
+      border-radius: 5px;
+    }
+    
+    .cotton-candy.eaten {
+      transform: scale(0);
+      opacity: 0;
+    }
+    
+    .cotton-candy.eaten:before {
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="theme-light">
+    <div id="loader">
+      <div class="frog-loader"></div>
+      <p>Cargando Curirana...</p>
+    </div>
+
+    <div id="main-container" style="display: none;">
+      <header id="main-header"></header>
+      
+      <main id="content">
+        <section class="page-header">
+          <h1>Gestión de Pensamientos</h1>
+          <p class="page-description">Aprende a observar, identificar y gestionar tus pensamientos para disminuir la ansiedad.</p>
+        </section>
+        
+        <section class="thoughts-metaphor-section">
+          <div class="section-container">
+            <div class="card">
+              <div class="thought-metaphor">
+                <div class="thought-metaphor-icon">
+                  🍭
+                </div>
+                <div class="thought-metaphor-content">
+                  <h3>El niño y el algodón de azúcar</h3>
+                  <p>Imagina que tus pensamientos son como un niño que te pide insistentemente algodón de azúcar en la feria. El niño representa tu mente, tú eres el adulto responsable, y el algodón de azúcar es tu atención.</p>
+                  <p>Cuando le das atención a un pensamiento, es como darle algodón de azúcar al niño: volverá a pedirte más. Si en cambio, dejas de prestarle atención, poco a poco irá pidiendo cada vez menos hasta que dejará de insistir.</p>
+                </div>
+              </div>
+              
+              <div class="cotton-candy-animation">
+                <div class="child-figure">
+                  <div class="child-head"></div>
+                </div>
+                <div class="cotton-candy" id="cotton-candy"></div>
+              </div>
+              
+              <div class="button-container text-center">
+                <button id="feed-thoughts" class="btn btn-primary">Alimentar pensamiento</button>
+                <button id="ignore-thoughts" class="btn">Ignorar pensamiento</button>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <section class="thoughts-exercises-section">
+          <div class="section-container">
+            <h2>Técnicas para gestionar pensamientos</h2>
+            
+            <div class="thoughts-container">
+              <div class="thought-exercise">
+                <h3><i data-feather="eye"></i> Observar sin juzgar</h3>
+                <p>Los pensamientos son solo información que crea tu mente, no son hechos ni representan la realidad. Observarlos sin juzgarlos te permite tomar distancia.</p>
+                <div class="exercise-steps">
+                  <li>Siéntate cómodamente y cierra los ojos.</li>
+                  <li>Concéntrate en tu respiración durante unos minutos.</li>
+                  <li>Observa los pensamientos que surgen como si fueran nubes pasando por el cielo.</li>
+                  <li>No te identifiques con ellos, solo obsérvalos ir y venir.</li>
+                  <li>Cuando notes que te has distraído, vuelve amablemente a observar tu respiración.</li>
+                </div>
+                <div class="exercise-actions">
+                  <button class="btn btn-primary start-exercise" data-exercise="observe">Iniciar práctica</button>
+                </div>
+              </div>
+              
+              <div class="thought-exercise">
+                <h3><i data-feather="edit"></i> Registro de pensamientos</h3>
+                <p>Identificar y cuestionar pensamientos automáticos puede ayudarte a verlos con perspectiva y reducir su impacto emocional.</p>
+                <div class="exercise-steps">
+                  <li>Identifica una situación que te haya generado malestar.</li>
+                  <li>Escribe los pensamientos automáticos que surgieron.</li>
+                  <li>Reconoce las emociones asociadas a esos pensamientos.</li>
+                  <li>Cuestiona esos pensamientos buscando interpretaciones alternativas.</li>
+                  <li>Desarrolla respuestas más equilibradas y realistas.</li>
+                </div>
+                <div class="exercise-actions">
+                  <button class="btn btn-primary start-exercise" data-exercise="record">Iniciar registro</button>
+                </div>
+              </div>
+              
+              <div class="thought-exercise">
+                <h3><i data-feather="wind"></i> Deja pasar los pensamientos</h3>
+                <p>En lugar de luchar contra tus pensamientos o tratar de suprimirlos, puedes practicar dejarlos pasar como hojas en un río.</p>
+                <div class="exercise-steps">
+                  <li>Imagina un río tranquilo con hojas flotando en la superficie.</li>
+                  <li>Cuando surja un pensamiento, colócalo mentalmente en una hoja.</li>
+                  <li>Observa cómo la hoja con el pensamiento se aleja flotando río abajo.</li>
+                  <li>No intentes cambiar o eliminar el pensamiento, solo déjalo ir.</li>
+                  <li>Continúa el proceso con cada nuevo pensamiento que surja.</li>
+                </div>
+                <div class="exercise-actions">
+                  <button class="btn btn-primary start-exercise" data-exercise="leaves">Iniciar práctica</button>
+                </div>
+              </div>
+              
+              <div class="thought-exercise">
+                <h3><i data-feather="sun"></i> Defusión cognitiva</h3>
+                <p>La defusión cognitiva te ayuda a separarte de tus pensamientos, reconociéndolos como eventos mentales, no como verdades absolutas.</p>
+                <div class="exercise-steps">
+                  <li>Identifica un pensamiento recurrente que te cause malestar.</li>
+                  <li>Añade al inicio "Estoy teniendo el pensamiento de que..."</li>
+                  <li>Observa cómo cambia tu relación con ese pensamiento.</li>
+                  <li>Prueba otras técnicas como agradecer a tu mente, cantar el pensamiento o decirlo con voz graciosa.</li>
+                  <li>Nota cómo se reduce el impacto emocional del pensamiento.</li>
+                </div>
+                <div class="exercise-actions">
+                  <button class="btn btn-primary start-exercise" data-exercise="defusion">Iniciar práctica</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        
+        <div id="record-thoughts-modal" style="display: none;">
+          <h3>Registro de pensamientos</h3>
+          <form id="thought-record-form" class="thought-record-form">
+            <div class="form-group">
+              <label for="situation">Situación:</label>
+              <textarea id="situation" placeholder="Describe brevemente la situación que te generó malestar"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="automatic-thoughts">Pensamientos automáticos:</label>
+              <textarea id="automatic-thoughts" placeholder="¿Qué pensamientos pasaron por tu mente en ese momento?"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="emotions">Emociones:</label>
+              <textarea id="emotions" placeholder="¿Qué emociones sentiste? ¿Con qué intensidad (1-10)?"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="alternative-thoughts">Pensamientos alternativos:</label>
+              <textarea id="alternative-thoughts" placeholder="¿Qué otras interpretaciones podrían ser posibles?"></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="balanced-response">Respuesta equilibrada:</label>
+              <textarea id="balanced-response" placeholder="¿Cuál sería una forma más equilibrada de ver esta situación?"></textarea>
+            </div>
+            
+            <div class="form-actions">
+              <button type="button" id="cancel-record" class="btn">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+          </form>
+        </div>
+        
+        <div id="thought-exercises-modal" style="display: none;"></div>
+      </main>
+      
+      <footer id="main-footer"></footer>
+    </div>
+  </div>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  
+  <!-- Componentes -->
+  <script src="../js/components-loader.js"></script>
+  
+  <!-- Scripts -->
+  <script src="../js/firebase-config.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/utils/ui-helpers.js"></script>
+  <script src="../js/utils/date-helpers.js"></script>
+  <script src="../js/utils/storage.js"></script>
+  <script src="../js/modules/thoughts.js"></script>
+  <script src="../js/app.js"></script>
+
+  <script>
+    // Cuando la página se carga
+    document.addEventListener('DOMContentLoaded', () => {
+      // Mostrar la interfaz principal después de cargar
+      setTimeout(() => {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('main-container').style.display = 'block';
+      }, 1000);
+      
+      // Inicializar iconos Feather
+      feather.replace();
+      
+      // Inicializar animación de algodón de azúcar
+      initCottonCandyAnimation();
+      
+      // Inicializar eventos para ejercicios
+      initThoughtExercises();
+    });
+    
+    // Inicializar animación de algodón de azúcar
+    function initCottonCandyAnimation() {
+      const feedButton = document.getElementById('feed-thoughts');
+      const ignoreButton = document.getElementById('ignore-thoughts');
+      const cottonCandy = document.getElementById('cotton-candy');
+      
+      let cottonCandyCount = 1;
+      let cottonCandyTimeout;
+      
+      feedButton.addEventListener('click', () => {
+        // Eliminar clase si existe
+        cottonCandy.classList.remove('eaten');
+        
+        // Mostrar nuevo algodón
+        clearTimeout(cottonCandyTimeout);
+        
+        // Crear nuevo algodón si no existe
+        if (cottonCandyCount === 0) {
+          setTimeout(() => {
+            cottonCandy.style.display = 'block';
+            cottonCandyCount = 1;
+          }, 300);
+        } 
+        // Si existe, crear más algodones
+        else if (cottonCandyCount < 3) {
+          const newCottonCandy = document.createElement('div');
+          newCottonCandy.className = 'cotton-candy';
+          newCottonCandy.style.left = `${30 + cottonCandyCount * 20}%`;
+          
+          document.querySelector('.cotton-candy-animation').appendChild(newCottonCandy);
+          cottonCandyCount++;
+        }
+        
+        // Mostrar mensaje
+        window.uiHelper.showAlert('Has alimentado el pensamiento. Ahora vendrán más.', 'warning');
+      });
+      
+      ignoreButton.addEventListener('click', () => {
+        // Si no hay algodones, no hacer nada
+        if (cottonCandyCount === 0) return;
+        
+        // Marcar todos los algodones como comidos
+        document.querySelectorAll('.cotton-candy').forEach(candy => {
+          candy.classList.add('eaten');
+        });
+        
+        // Eliminar después de la animación
+          cottonCandyTimeout = setTimeout(() => {
+            document.querySelectorAll('.cotton-candy:not(#cotton-candy)').forEach(candy => {
+              candy.remove();
+            });
+            
+            cottonCandy.style.display = 'none';
+            cottonCandyCount = 0;
+          }, 500);
+          
+          // Mostrar mensaje
+          window.uiHelper.showAlert('Has ignorado el pensamiento. Con el tiempo, vendrán menos.', 'success');
+        });
+      }
+    
+    // Inicializar eventos para ejercicios de pensamientos
+    function initThoughtExercises() {
+      const exerciseButtons = document.querySelectorAll('.start-exercise');
+      
+      exerciseButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const exerciseType = button.dataset.exercise;
+          openExerciseModal(exerciseType);
+        });
+      });
+      
+      // Configurar modal de registro de pensamientos
+      const thoughtRecordForm = document.getElementById('thought-record-form');
+      const cancelRecordButton = document.getElementById('cancel-record');
+      
+      if (thoughtRecordForm) {
+        thoughtRecordForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          saveThoughtRecord();
+        });
+      }
+      
+      if (cancelRecordButton) {
+        cancelRecordButton.addEventListener('click', () => {
+          closeExerciseModal();
+        });
+      }
+    }
+    
+    // Abrir modal de ejercicio
+    function openExerciseModal(exerciseType) {
+      const modal = document.getElementById('thought-exercises-modal');
+      const recordModal = document.getElementById('record-thoughts-modal');
+      
+      if (exerciseType === 'record') {
+        // Mostrar formulario de registro de pensamientos
+        window.uiHelper.showModal('Registro de pensamientos', recordModal.innerHTML, {
+          fullscreen: false,
+          closeOnClickOutside: false,
+          onClose: () => {
+            // Limpiar formulario
+            const form = document.getElementById('thought-record-form');
+            if (form) form.reset();
+          }
+        });
+        
+        // Configurar eventos del formulario en el modal
+        const modalForm = document.querySelector('.modal-body form');
+        if (modalForm) {
+          modalForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            saveThoughtRecord();
+          });
+          
+          const cancelButton = modalForm.querySelector('button[type="button"]');
+          if (cancelButton) {
+            cancelButton.addEventListener('click', () => {
+              closeExerciseModal();
+            });
+          }
+        }
+      } else {
+        // Preparar contenido según tipo de ejercicio
+        let content = '';
+        let title = '';
+        
+        switch(exerciseType) {
+          case 'observe':
+            title = 'Observar sin juzgar';
+            content = createObserveExerciseContent();
+            break;
+          case 'leaves':
+            title = 'Deja pasar los pensamientos';
+            content = createLeavesExerciseContent();
+            break;
+          case 'defusion':
+            title = 'Defusión cognitiva';
+            content = createDefusionExerciseContent();
+            break;
+          default:
+            title = 'Ejercicio de gestión de pensamientos';
+            content = '<p>Contenido no disponible para este ejercicio.</p>';
+        }
+        
+        // Mostrar modal
+        window.uiHelper.showModal(title, content, {
+          fullscreen: false,
+          closeOnClickOutside: true
+        });
+      }
+    }
+    
+    // Cerrar modal de ejercicio
+    function closeExerciseModal() {
+      // Buscar el botón de cerrar del modal y simular clic
+      const closeButton = document.querySelector('.modal-header button');
+      if (closeButton) {
+        closeButton.click();
+      }
+    }
+    
+    // Guardar registro de pensamiento
+    function saveThoughtRecord() {
+      // Obtener datos del formulario (desde el modal)
+      const situation = document.querySelector('.modal-body #situation') || document.getElementById('situation');
+      const automaticThoughts = document.querySelector('.modal-body #automatic-thoughts') || document.getElementById('automatic-thoughts');
+      const emotions = document.querySelector('.modal-body #emotions') || document.getElementById('emotions');
+      const alternativeThoughts = document.querySelector('.modal-body #alternative-thoughts') || document.getElementById('alternative-thoughts');
+      const balancedResponse = document.querySelector('.modal-body #balanced-response') || document.getElementById('balanced-response');
+      
+      // Validar datos
+      if (!situation || !situation.value || !automaticThoughts || !automaticThoughts.value) {
+        window.uiHelper.showAlert('Por favor, completa al menos la situación y los pensamientos automáticos', 'warning');
+        return;
+      }
+      
+      // Crear objeto de pensamiento
+      const thoughtRecord = {
+        situation: situation.value,
+        automaticThoughts: automaticThoughts.value,
+        emotions: emotions ? emotions.value : '',
+        alternativeThoughts: alternativeThoughts ? alternativeThoughts.value : '',
+        balancedResponse: balancedResponse ? balancedResponse.value : '',
+        timestamp: new Date().toISOString(),
+        userId: window.authHelper && window.authHelper.getCurrentUserId ? window.authHelper.getCurrentUserId() : 'anonymous'
+      };
+      
+      // Guardar pensamiento
+      if (window.thoughtsHelper && window.thoughtsHelper.saveThoughtRecord) {
+        window.thoughtsHelper.saveThoughtRecord(thoughtRecord)
+          .then(() => {
+            window.uiHelper.showAlert('Pensamiento registrado correctamente', 'success');
+            closeExerciseModal();
+          })
+          .catch(error => {
+            console.error('Error al guardar pensamiento:', error);
+            window.uiHelper.showAlert('Error al guardar el pensamiento', 'error');
+          });
+      } else {
+        // Guardar en localStorage si no está disponible el módulo
+        let thoughtRecords = JSON.parse(localStorage.getItem('curirana_thoughts') || '[]');
+        thoughtRecords.push(thoughtRecord);
+        localStorage.setItem('curirana_thoughts', JSON.stringify(thoughtRecords));
+        
+        window.uiHelper.showAlert('Pensamiento registrado correctamente', 'success');
+        closeExerciseModal();
+      }
+    }
+    
+    // Crear contenido para ejercicio de observación
+    function createObserveExerciseContent() {
+      return `
+        <div class="observation-exercise">
+          <p>Este ejercicio te ayudará a practicar la observación de tus pensamientos sin juzgarlos.</p>
+          
+          <div class="timer-container">
+            <div class="timer-display">
+              <span id="minutes">05</span>:<span id="seconds">00</span>
+            </div>
+            
+            <div class="timer-controls">
+              <button id="start-timer" class="btn btn-primary">Comenzar</button>
+              <button id="pause-timer" class="btn" style="display: none;">Pausar</button>
+              <button id="reset-timer" class="btn" style="display: none;">Reiniciar</button>
+            </div>
+          </div>
+          
+          <div class="exercise-instructions">
+            <h4>Instrucciones:</h4>
+            <ol>
+              <li>Siéntate en una posición cómoda y cierra los ojos.</li>
+              <li>Respira profundamente y centra tu atención en la respiración.</li>
+              <li>Observa tus pensamientos como si fueran nubes pasando en el cielo.</li>
+              <li>No intentes cambiarlos o juzgarlos, solo obsérvalos ir y venir.</li>
+              <li>Cuando notes que te has distraído, vuelve amablemente a tu respiración.</li>
+            </ol>
+          </div>
+          
+          <div class="reflection-section" style="display: none;">
+            <h4>Reflexión:</h4>
+            <p>Tómate un momento para reflexionar sobre tu experiencia:</p>
+            <textarea id="observation-reflection" placeholder="¿Qué notaste durante la práctica? ¿Qué tipo de pensamientos surgieron?"></textarea>
+            <button id="save-reflection" class="btn btn-primary">Guardar reflexión</button>
+          </div>
+        </div>
+        
+        <script>
+          // Configurar temporizador
+          let timerInterval;
+          let timerRunning = false;
+          let totalSeconds = 5 * 60; // 5 minutos
+          
+          const startButton = document.getElementById('start-timer');
+          const pauseButton = document.getElementById('pause-timer');
+          const resetButton = document.getElementById('reset-timer');
+          const minutesDisplay = document.getElementById('minutes');
+          const secondsDisplay = document.getElementById('seconds');
+          const reflectionSection = document.querySelector('.reflection-section');
+          const saveReflectionButton = document.getElementById('save-reflection');
+          
+          function updateTimerDisplay() {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = totalSeconds % 60;
+            
+            minutesDisplay.textContent = minutes.toString().padStart(2, '0');
+            secondsDisplay.textContent = seconds.toString().padStart(2, '0');
+          }
+          
+          function startTimer() {
+            if (!timerRunning) {
+              timerRunning = true;
+              
+              timerInterval = setInterval(() => {
+                totalSeconds--;
+                
+                if (totalSeconds <= 0) {
+                  clearInterval(timerInterval);
+                  timerRunning = false;
+                  
+                  // Mostrar sección de reflexión
+                  reflectionSection.style.display = 'block';
+                  
+                  // Ocultar controles del temporizador
+                  startButton.style.display = 'none';
+                  pauseButton.style.display = 'none';
+                  resetButton.style.display = 'inline-block';
+                }
+                
+                updateTimerDisplay();
+              }, 1000);
+              
+              startButton.style.display = 'none';
+              pauseButton.style.display = 'inline-block';
+              resetButton.style.display = 'inline-block';
+            }
+          }
+          
+          function pauseTimer() {
+            if (timerRunning) {
+              clearInterval(timerInterval);
+              timerRunning = false;
+              
+              pauseButton.style.display = 'none';
+              startButton.style.display = 'inline-block';
+            }
+          }
+          
+          function resetTimer() {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            totalSeconds = 5 * 60;
+            updateTimerDisplay();
+            
+            reflectionSection.style.display = 'none';
+            resetButton.style.display = 'none';
+            startButton.style.display = 'inline-block';
+            pauseButton.style.display = 'none';
+          }
+          
+          function saveReflection() {
+            const reflection = document.getElementById('observation-reflection').value;
+            
+            if (!reflection) {
+              window.uiHelper.showAlert('Por favor, escribe una reflexión antes de guardar', 'warning');
+              return;
+            }
+            
+            // Guardar reflexión
+            let reflections = JSON.parse(localStorage.getItem('curirana_reflections') || '[]');
+            reflections.push({
+              type: 'observation',
+              content: reflection,
+              timestamp: new Date().toISOString()
+            });
+            
+            localStorage.setItem('curirana_reflections', JSON.stringify(reflections));
+            
+            window.uiHelper.showAlert('Reflexión guardada correctamente', 'success');
+            
+            // Cerrar modal
+            const closeButton = document.querySelector('.modal-header button');
+            if (closeButton) {
+              closeButton.click();
+            }
+          }
+          
+          // Asignar eventos
+          if (startButton) startButton.addEventListener('click', startTimer);
+          if (pauseButton) pauseButton.addEventListener('click', pauseTimer);
+          if (resetButton) resetButton.addEventListener('click', resetTimer);
+          if (saveReflectionButton) saveReflectionButton.addEventListener('click', saveReflection);
+        </script>
+      `;
+    }
+    
+    // Crear contenido para ejercicio de hojas en el río
+    function createLeavesExerciseContent() {
+      return `
+        <div class="leaves-exercise">
+          <p>Este ejercicio te ayudará a practicar dejar pasar tus pensamientos como hojas en un río, sin engancharte a ellos.</p>
+          
+          <div class="river-animation">
+            <svg width="100%" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+              <!-- Fondo del río -->
+              <rect x="0" y="50" width="600" height="100" fill="#a1d9c9" />
+              
+              <!-- Ondas del río -->
+              <path d="M0,80 Q50,60 100,80 T200,80 T300,80 T400,80 T500,80 T600,80" fill="none" stroke="#7ebeb1" stroke-width="2" />
+              <path d="M0,100 Q50,120 100,100 T200,100 T300,100 T400,100 T500,100 T600,100" fill="none" stroke="#7ebeb1" stroke-width="2" />
+              <path d="M0,120 Q50,100 100,120 T200,120 T300,120 T400,120 T500,120 T600,120" fill="none" stroke="#7ebeb1" stroke-width="2" />
+              
+              <!-- Orillas -->
+              <rect x="0" y="30" width="600" height="20" fill="#8fc0a9" />
+              <rect x="0" y="150" width="600" height="20" fill="#8fc0a9" />
+              
+              <!-- Grupo de hojas -->
+              <g id="leaves"></g>
+            </svg>
+          </div>
+          
+          <div class="thought-input">
+            <textarea id="thought-input" placeholder="Escribe un pensamiento que quieras dejar ir..."></textarea>
+            <button id="add-thought" class="btn btn-primary">Añadir al río</button>
+          </div>
+          
+          <div class="exercise-instructions">
+            <h4>Instrucciones:</h4>
+            <ol>
+              <li>Identifica un pensamiento que quieras dejar ir.</li>
+              <li>Escríbelo en el campo de texto y añádelo al río.</li>
+              <li>Observa cómo la hoja con el pensamiento se aleja flotando río abajo.</li>
+              <li>Repite el proceso con cada pensamiento que quieras liberar.</li>
+              <li>Observa cómo te sientes al ver tus pensamientos alejarse.</li>
+            </ol>
+          </div>
+        </div>
+        
+        <script>
+          const thoughtInput = document.getElementById('thought-input');
+          const addThoughtButton = document.getElementById('add-thought');
+          const leavesGroup = document.getElementById('leaves');
+          
+          let nextLeafId = 1;
+          
+          function addLeafWithThought() {
+            const thought = thoughtInput.value.trim();
+            
+            if (!thought) {
+              window.uiHelper.showAlert('Por favor, escribe un pensamiento', 'warning');
+              return;
+            }
+            
+            // Crear hoja
+            const leafId = `leaf-${nextLeafId++}`;
+            const leafColor = getRandomLeafColor();
+            
+            // Crear elementos SVG
+            const leafGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            leafGroup.setAttribute('id', leafId);
+            leafGroup.setAttribute('transform', 'translate(-100, 100)');
+            
+            // Forma de la hoja
+            const leafPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            leafPath.setAttribute('d', 'M0,0 Q10,-10 20,0 T40,0 Q30,10 20,20 Q10,10 0,0 Z');
+            leafPath.setAttribute('fill', leafColor);
+            
+            // Texto del pensamiento (limitado a 20 caracteres)
+            const thoughtText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            thoughtText.setAttribute('x', '20');
+            thoughtText.setAttribute('y', '10');
+            thoughtText.setAttribute('text-anchor', 'middle');
+            thoughtText.setAttribute('font-size', '8');
+            thoughtText.setAttribute('fill', '#333');
+            thoughtText.textContent = thought.length > 20 ? thought.substring(0, 17) + '...' : thought;
+            
+            leafGroup.appendChild(leafPath);
+            leafGroup.appendChild(thoughtText);
+            leavesGroup.appendChild(leafGroup);
+            
+            // Animar hoja
+            animateLeaf(leafId);
+            
+            // Limpiar input
+            thoughtInput.value = '';
+            
+            // Guardar pensamiento liberado
+            let releasedThoughts = JSON.parse(localStorage.getItem('curirana_released_thoughts') || '[]');
+            releasedThoughts.push({
+              thought: thought,
+              timestamp: new Date().toISOString()
+            });
+            
+            localStorage.setItem('curirana_released_thoughts', JSON.stringify(releasedThoughts));
+          }
+          
+          function getRandomLeafColor() {
+            const colors = [
+              '#c8d5b9', // verde claro
+              '#8fc0a9', // verde medio
+              '#faf3dd', // beige
+              '#f4f7f2', // blanco verdoso
+              '#b5a4d0'  // lavanda
+            ];
+            
+            return colors[Math.floor(Math.random() * colors.length)];
+          }
+          
+          function animateLeaf(leafId) {
+            const leaf = document.getElementById(leafId);
+            let posX = -100;
+            let posY = 80 + Math.random() * 40; // Posición vertical aleatoria en el río
+            let rotation = 0;
+            
+            const animate = () => {
+              // Mover hoja
+              posX += 2;
+              rotation += 0.5;
+              
+              // Aplicar transformación
+              leaf.setAttribute('transform', `translate(${posX}, ${posY}) rotate(${rotation})`);
+              
+              // Continuar animación si la hoja sigue en el SVG
+              if (posX < 700) {
+                requestAnimationFrame(animate);
+              } else {
+                // Eliminar hoja cuando sale del SVG
+                leaf.remove();
+              }
+            };
+            
+            // Iniciar animación
+            animate();
+          }
+          
+          // Asignar eventos
+          if (addThoughtButton) {
+            addThoughtButton.addEventListener('click', addLeafWithThought);
+          }
+          
+          if (thoughtInput) {
+            thoughtInput.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                addLeafWithThought();
+              }
+            });
+          }
+        </script>
+      `;
+    }
+    
+    // Crear contenido para ejercicio de defusión cognitiva
+    function createDefusionExerciseContent() {
+      return `
+        <div class="defusion-exercise">
+          <p>Este ejercicio te ayudará a practicar la defusión cognitiva, una técnica para separarte de tus pensamientos.</p>
+          
+          <div class="thought-input">
+            <label for="difficult-thought">Escribe un pensamiento difícil que tengas:</label>
+            <textarea id="difficult-thought" placeholder="Ej: No soy capaz de manejar esto"></textarea>
+          </div>
+          
+          <div class="defusion-techniques">
+            <h4>Técnicas de defusión:</h4>
+            
+            <div class="technique-card">
+              <h5>Prefijo de defusión</h5>
+              <p>Añade al inicio: "Estoy teniendo el pensamiento de que..."</p>
+              <div class="result-box" id="prefix-result">Resultado aparecerá aquí</div>
+              <button class="btn btn-primary apply-technique" data-technique="prefix">Aplicar</button>
+            </div>
+            
+            <div class="technique-card">
+              <h5>Voz graciosa</h5>
+              <p>Imagina que dices el pensamiento con voz de dibujos animados</p>
+              <div class="result-box" id="voice-result">Resultado aparecerá aquí</div>
+              <button class="btn btn-primary apply-technique" data-technique="voice">Aplicar</button>
+            </div>
+            
+            <div class="technique-card">
+              <h5>Agradecimiento a la mente</h5>
+              <p>Responde: "Gracias mente por ese pensamiento tan útil"</p>
+              <div class="result-box" id="thanks-result">Resultado aparecerá aquí</div>
+              <button class="btn btn-primary apply-technique" data-technique="thanks">Aplicar</button>
+            </div>
+            
+            <div class="technique-card">
+              <h5>Exteriorizar el pensamiento</h5>
+              <p>Imagina que el pensamiento es un objeto físico fuera de ti</p>
+              <div class="result-box" id="object-result">Resultado aparecerá aquí</div>
+              <button class="btn btn-primary apply-technique" data-technique="object">Aplicar</button>
+            </div>
+          </div>
+          
+          <div class="reflection-box">
+            <h4>Reflexión:</h4>
+            <p>¿Cómo te sientes después de aplicar estas técnicas? ¿Notas algún cambio en tu relación con el pensamiento?</p>
+            <textarea id="defusion-reflection" placeholder="Escribe tu reflexión aquí..."></textarea>
+            <button id="save-defusion" class="btn btn-primary">Guardar reflexión</button>
+          </div>
+        </div>
+        
+        <script>
+          const difficultThoughtInput = document.getElementById('difficult-thought');
+          const techniqueButtons = document.querySelectorAll('.apply-technique');
+          const saveDefusionButton = document.getElementById('save-defusion');
+          
+          // Aplicar técnica de defusión
+          function applyDefusionTechnique(technique) {
+            const thought = difficultThoughtInput.value.trim();
+            
+            if (!thought) {
+              window.uiHelper.showAlert('Por favor, escribe un pensamiento difícil', 'warning');
+              return;
+            }
+            
+            let result = '';
+            
+            switch(technique) {
+              case 'prefix':
+                result = `Estoy teniendo el pensamiento de que ${thought.toLowerCase()}`;
+                break;
+              case 'voice':
+                result = `"${thought}" (con voz de dibujos animados)`;
+                break;
+              case 'thanks':
+                result = `Gracias mente por ese pensamiento tan útil: "${thought}"`;
+                break;
+              case 'object':
+                result = `Veo que hay un pensamiento llamado "${thought}" flotando frente a mí`;
+                break;
+            }
+            
+            // Actualizar caja de resultado
+            const resultBox = document.getElementById(`${technique}-result`);
+            if (resultBox) {
+              resultBox.textContent = result;
+              resultBox.classList.add('highlight');
+              
+              // Quitar highlight después de un tiempo
+              setTimeout(() => {
+                resultBox.classList.remove('highlight');
+              }, 1500);
+            }
+          }
+          
+          // Guardar reflexión de defusión
+          function saveDefusionReflection() {
+            const reflection = document.getElementById('defusion-reflection').value;
+            const thought = difficultThoughtInput.value;
+            
+            if (!reflection) {
+              window.uiHelper.showAlert('Por favor, escribe una reflexión antes de guardar', 'warning');
+              return;
+            }
+            
+            // Guardar reflexión
+            let reflections = JSON.parse(localStorage.getItem('curirana_reflections') || '[]');
+            reflections.push({
+              type: 'defusion',
+              thought: thought,
+              reflection: reflection,
+              timestamp: new Date().toISOString()
+            });
+            
+            localStorage.setItem('curirana_reflections', JSON.stringify(reflections));
+            
+            window.uiHelper.showAlert('Reflexión guardada correctamente', 'success');
+            
+            // Cerrar modal
+            const closeButton = document.querySelector('.modal-header button');
+            if (closeButton) {
+              closeButton.click();
+            }
+          }
+          
+          // Asignar eventos
+          techniqueButtons.forEach(button => {
+            button.addEventListener('click', () => {
+              const technique = button.dataset.technique;
+              applyDefusionTechnique(technique);
+            });
+          });
+          
+          if (saveDefusionButton) {
+            saveDefusionButton.addEventListener('click', saveDefusionReflection);
+          }
+        </script>
+      `;
+    }
+  </script>
+</body>
+</html>
