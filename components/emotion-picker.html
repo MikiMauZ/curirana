@@ -1,0 +1,213 @@
+<div class="emotion-picker-container">
+  <div class="emotion-categories">
+    <button class="category-button active" data-category="all">Todas</button>
+    <button class="category-button" data-category="positive">Positivas</button>
+    <button class="category-button" data-category="neutral">Neutras</button>
+    <button class="category-button" data-category="difficult">Difíciles</button>
+  </div>
+  
+  <div class="emotions-grid">
+    <!-- Se cargará dinámicamente con JS -->
+  </div>
+  
+  <div class="emotion-description">
+    Selecciona una emoción para registrarla
+  </div>
+</div>
+
+<style>
+  .emotion-picker-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    width: 100%;
+  }
+  
+  .emotion-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .category-button {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 1px solid var(--background-secondary);
+    border-radius: var(--border-radius-small);
+    background-color: var(--background-tertiary);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+  
+  .category-button.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+  }
+  
+  .emotions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+  }
+  
+  .emotion-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--background-secondary);
+    border-radius: var(--border-radius-small);
+    background-color: var(--background-tertiary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+  }
+  
+  .emotion-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .emotion-button.selected {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(161, 217, 201, 0.3);
+  }
+  
+  .emotion-emoji {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-xs);
+  }
+  
+  .emotion-name {
+    font-size: var(--font-size-xs);
+    text-align: center;
+  }
+  
+  .emotion-description {
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-small);
+    background-color: var(--background-secondary);
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    text-align: center;
+    transition: opacity var(--transition-fast);
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .emotion-description.visible {
+    opacity: 1;
+  }
+  
+  @media (max-width: 576px) {
+    .emotions-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .emotion-emoji {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+
+<script>
+  // Inicializar selector de emociones
+  (function() {
+    // Obtener emociones desde el módulo si está disponible
+    const emotions = window.emotionsHelper && window.emotionsHelper.getEmotionsList ? 
+                     window.emotionsHelper.getEmotionsList() : 
+                     [
+                       { id: 'happy', name: 'Feliz', emoji: '😊', description: 'Sensación de bienestar y alegría', category: 'positive' },
+                       { id: 'sad', name: 'Triste', emoji: '😢', description: 'Sensación de pena o melancolía', category: 'difficult' },
+                       { id: 'angry', name: 'Enfadado', emoji: '😠', description: 'Sensación de irritación o indignación', category: 'difficult' },
+                       { id: 'fearful', name: 'Temeroso', emoji: '😨', description: 'Sensación de miedo o preocupación', category: 'difficult' },
+                       { id: 'disgusted', name: 'Disgustado', emoji: '🤢', description: 'Sensación de rechazo o repulsión', category: 'difficult' },
+                       { id: 'surprised', name: 'Sorprendido', emoji: '😲', description: 'Sensación de asombro o impresión', category: 'neutral' },
+                       { id: 'neutral', name: 'Neutral', emoji: '😐', description: 'Sin una emoción predominante', category: 'neutral' },
+                       { id: 'calm', name: 'Tranquilo', emoji: '😌', description: 'Sensación de paz y serenidad', category: 'positive' }
+                     ];
+    
+    // Generar botones de emociones
+    const emotionsGrid = document.querySelector('.emotions-grid');
+    if (!emotionsGrid) return;
+    
+    // Función para renderizar emociones
+    function renderEmotions(category = 'all') {
+      // Limpiar contenedor
+      emotionsGrid.innerHTML = '';
+      
+      // Filtrar emociones por categoría
+      const filteredEmotions = category === 'all' ? 
+                              emotions : 
+                              emotions.filter(e => e.category === category);
+      
+      // Crear botones
+      filteredEmotions.forEach(emotion => {
+        const button = document.createElement('button');
+        button.className = 'emotion-button';
+        button.dataset.emotionId = emotion.id;
+        button.innerHTML = `
+          <div class="emotion-emoji">${emotion.emoji}</div>
+          <div class="emotion-name">${emotion.name}</div>
+        `;
+        
+        // Evento al hacer clic
+        button.addEventListener('click', () => {
+          // Eliminar selección previa
+          document.querySelectorAll('.emotion-button.selected').forEach(el => {
+            el.classList.remove('selected');
+          });
+          
+          // Marcar como seleccionada
+          button.classList.add('selected');
+          
+          // Actualizar descripción
+          const descriptionEl = document.querySelector('.emotion-description');
+          if (descriptionEl) {
+            descriptionEl.textContent = emotion.description;
+            descriptionEl.classList.add('visible');
+          }
+          
+          // Actualizar campo oculto si existe
+          const emotionInput = document.getElementById('selected-emotion');
+          if (emotionInput) {
+            emotionInput.value = emotion.id;
+          }
+          
+          // Disparar evento personalizado
+          const event = new CustomEvent('emotion-selected', {
+            detail: { emotion }
+          });
+          document.dispatchEvent(event);
+        });
+        
+        emotionsGrid.appendChild(button);
+      });
+    }
+    
+    // Renderizar todas las emociones por defecto
+    renderEmotions();
+    
+    // Configurar botones de categoría
+    const categoryButtons = document.querySelectorAll('.category-button');
+    categoryButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Quitar clase activa
+        categoryButtons.forEach(btn => {
+          btn.classList.remove('active');
+        });
+        
+        // Añadir clase activa al botón seleccionado
+        button.classList.add('active');
+        
+        // Renderizar emociones de la categoría
+        renderEmotions(button.dataset.category);
+      });
+    });
+  })();
+</script>

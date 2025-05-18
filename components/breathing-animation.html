@@ -1,0 +1,276 @@
+<div class="breathing-animation-wrapper">
+  <div class="animation-container">
+    <div class="breathing-circle">
+      <div class="breathing-text">Respira</div>
+    </div>
+  </div>
+  
+  <div class="breathing-controls">
+    <div class="breathing-timer">
+      <span id="phase-text">Preparado</span>
+      <div class="timer-display">
+        <span id="timer-count">00:00</span>
+      </div>
+    </div>
+    
+    <div class="breathing-buttons">
+      <button id="start-breathing" class="btn btn-primary">
+        <i data-feather="play"></i>
+        <span>Comenzar</span>
+      </button>
+      <button id="pause-breathing" class="btn" style="display: none;">
+        <i data-feather="pause"></i>
+        <span>Pausar</span>
+      </button>
+      <button id="stop-breathing" class="btn" style="display: none;">
+        <i data-feather="square"></i>
+        <span>Detener</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .breathing-animation-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .animation-container {
+    width: 100%;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .breathing-circle {
+    width: 150px;
+    height: 150px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+    transition: transform 4s ease-in-out, opacity 4s ease-in-out;
+    position: relative;
+  }
+  
+  .breathing-circle.inhale {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+  
+  .breathing-circle.hold {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+  
+  .breathing-circle.exhale {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  
+  .breathing-text {
+    color: white;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+  }
+  
+  .breathing-controls {
+    width: 100%;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .breathing-timer {
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .breathing-timer #phase-text {
+    display: block;
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    color: var(--primary-color);
+  }
+  
+  .timer-display {
+    font-size: var(--font-size-lg);
+    font-family: monospace;
+  }
+  
+  .breathing-buttons {
+    display: flex;
+    gap: var(--spacing-md);
+  }
+</style>
+
+<script>
+  (function() {
+    // Referencias a elementos
+    const circle = document.querySelector('.breathing-circle');
+    const phaseText = document.getElementById('phase-text');
+    const timerCount = document.getElementById('timer-count');
+    const startBtn = document.getElementById('start-breathing');
+    const pauseBtn = document.getElementById('pause-breathing');
+    const stopBtn = document.getElementById('stop-breathing');
+    
+    // Variables de estado
+    let isActive = false;
+    let currentPhase = 'ready';
+    let timer = null;
+    let totalSeconds = 0;
+    
+    // Si existe el módulo de respiración, delegamos el control
+    if (window.breathingHelper) {
+      console.log('Módulo de respiración encontrado, delegando control...');
+      return;
+    }
+    
+    // Configuración de respiración por defecto
+    const defaultBreathing = {
+      inhale: 4,
+      hold: 7,
+      exhale: 8,
+      pause: 1
+    };
+    
+    // Función para iniciar la respiración
+    function startBreathing() {
+      if (isActive) return;
+      
+      isActive = true;
+      totalSeconds = 0;
+      
+      // Actualizar UI
+      startBtn.style.display = 'none';
+      pauseBtn.style.display = 'inline-flex';
+      stopBtn.style.display = 'inline-flex';
+      
+      // Iniciar ciclo de respiración
+      startBreathingCycle();
+      
+      // Iniciar temporizador
+      timer = setInterval(() => {
+        totalSeconds++;
+        updateTimerDisplay();
+      }, 1000);
+    }
+    
+    // Función para pausar la respiración
+    function pauseBreathing() {
+      isActive = false;
+      
+      // Limpiar temporizadores
+      clearTimeout(window.phaseTimeout);
+      clearInterval(timer);
+      
+      // Actualizar UI
+      pauseBtn.style.display = 'none';
+      startBtn.style.display = 'inline-flex';
+      
+      // Resetear animación
+      circle.className = 'breathing-circle';
+    }
+    
+    // Función para detener la respiración
+    function stopBreathing() {
+      isActive = false;
+      
+      // Limpiar temporizadores
+      clearTimeout(window.phaseTimeout);
+      clearInterval(timer);
+      
+      // Resetear contadores
+      totalSeconds = 0;
+      
+      // Actualizar UI
+      startBtn.style.display = 'inline-flex';
+      pauseBtn.style.display = 'none';
+      stopBtn.style.display = 'none';
+      phaseText.textContent = 'Preparado';
+      
+      // Resetear animación
+      circle.className = 'breathing-circle';
+      
+      // Actualizar temporizador
+      updateTimerDisplay();
+    }
+    
+    // Iniciar ciclo de respiración
+    function startBreathingCycle() {
+      if (!isActive) return;
+      
+      const phases = [
+        { name: 'inhale', duration: defaultBreathing.inhale, text: 'Inhala' },
+        { name: 'hold', duration: defaultBreathing.hold, text: 'Mantén' },
+        { name: 'exhale', duration: defaultBreathing.exhale, text: 'Exhala' },
+        { name: 'pause', duration: defaultBreathing.pause, text: 'Pausa' }
+      ];
+      
+      let currentTime = 0;
+      
+      // Para cada fase
+      phases.forEach(phase => {
+        if (phase.duration <= 0) return;
+        
+        // Programar inicio de fase
+        setTimeout(() => {
+          if (!isActive) return;
+          
+          // Actualizar fase actual
+          currentPhase = phase.name;
+          
+          // Actualizar UI
+          phaseText.textContent = phase.text;
+          
+          // Actualizar animación
+          circle.className = `breathing-circle ${phase.name}`;
+          
+        }, currentTime * 1000);
+        
+        currentTime += phase.duration;
+      });
+      
+      // Programar siguiente ciclo
+      window.phaseTimeout = setTimeout(() => {
+        if (isActive) {
+          startBreathingCycle();
+        }
+      }, currentTime * 1000);
+    }
+    
+    // Actualizar visualización del temporizador
+    function updateTimerDisplay() {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      
+      timerCount.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    // Asignar eventos a botones
+    if (startBtn) {
+      startBtn.addEventListener('click', startBreathing);
+    }
+    
+    if (pauseBtn) {
+      pauseBtn.addEventListener('click', pauseBreathing);
+    }
+    
+    if (stopBtn) {
+      stopBtn.addEventListener('click', stopBreathing);
+    }
+    
+    // Inicializar temporizador
+    updateTimerDisplay();
+  })();
+</script>
